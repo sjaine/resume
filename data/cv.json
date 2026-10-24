@@ -1,0 +1,153 @@
+{
+  "profile": {
+    "name": "Yoonsoo Jaine Shin",
+    "role": "Design Engineer",
+    "location": "Oakville, ON",
+    "contacts": [
+      { "label": "Email", "text": "jaineysshin@gmail.com", "href": "mailto:jaineysshin@gmail.com" },
+      { "label": "Portfolio", "text": "jaineysshin.com", "href": "https://jaineysshin.com" },
+      { "label": "LinkedIn", "text": "linkedin.com/in/jaineysshin", "href": "https://linkedin.com/in/jaineysshin" }
+    ]
+  },
+  "sections": [
+    {
+      "id": "experience",
+      "label": "Experience",
+      "entries": [
+        {
+          "id": "ssu",
+          "start": "Sep 2025",
+          "end": "Apr 2026",
+          "title": "Junior Designer",
+          "org": "Sheridan Student Union",
+          "location": "Oakville, ON",
+          "bullets": [
+            "Designed event assets strictly following brand guidelines and visual foundations.",
+            "Transformed stakeholder insights into high-impact promotional materials for campus events."
+          ]
+        },
+        {
+          "id": "elf",
+          "start": "Jun 2025",
+          "end": "Sep 2025",
+          "title": "Web Development / Design Intern",
+          "org": "Ever Lasting Fabric",
+          "location": "Remote",
+          "bullets": [
+            "Optimized Shopify site functionality and navigation to improve information hierarchy.",
+            "Revamped core pages to enhance accessibility (WCAG) and visual storytelling layouts."
+          ]
+        },
+        {
+          "id": "gwsk",
+          "start": "Jul 2025",
+          "end": "Aug 2025",
+          "title": "Design Intern",
+          "org": "GWSK Studio",
+          "location": "Remote",
+          "bullets": [
+            "Developed a scalable brand identity system within a 3.5-week sprint for digital consistency.",
+            "Delivered high-fidelity Figma prototypes ensuring technical feasibility."
+          ]
+        },
+        {
+          "id": "hackville",
+          "start": "Mar 2024",
+          "end": "Apr 2025",
+          "title": "Co-President",
+          "org": "Hackville",
+          "location": "Remote",
+          "bullets": [
+            "Led a cross-functional team and facilitated design thinking events for 300+ applicants and 150+ participants.",
+            "Managed stakeholder relations and strategic presentations to align event and business goals."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "projects",
+      "label": "Projects",
+      "entries": [
+        {
+          "id": "instagram",
+          "start": "Aug 2023",
+          "end": "Dec 2023",
+          "title": "Improve Instagram’s Accessibility",
+          "org": "JS, HTML, CSS",
+          "bullets": [
+            "Redesigned social media interface using the persona spectrum framework to enhance digital accessibility for diverse users.",
+            "Bridged the gap between design and development by implementing WCAG-compliant interfaces with vanilla JavaScript."
+          ]
+        },
+        {
+          "id": "artbook",
+          "start": "Aug 2024",
+          "end": "Dec 2024",
+          "title": "ArtBook",
+          "org": "React, MongoDB, MET Museum API, Netlify",
+          "bullets": [
+            "Developed a dynamic web app to visualize MET Museum data, managing complex API integrations and RESTful data structures.",
+            "Collaborated with a UI/UX Designer to translate high-fidelity designs into functional interfaces while ensuring visual consistency."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "education",
+      "label": "Education",
+      "entries": [
+        {
+          "id": "sheridan",
+          "start": "Sep 2022",
+          "end": "Apr 2026",
+          "title": "Sheridan College",
+          "org": "Honours Bachelor of Interaction Design (HCI)",
+          "location": "Oakville, ON",
+          "bullets": ["GPA 3.77 / 4.0 (Major GPA 3.83)"]
+        }
+      ]
+    },
+    {
+      "id": "certificates",
+      "label": "Certificates",
+      "entries": [
+        {
+          "id": "megastudy",
+          "start": "2024",
+          "title": "Web Development Bootcamp",
+          "org": "MegaStudy",
+          "bullets": ["Intensive Java, Spring, and full-stack development."]
+        },
+        {
+          "id": "tcps2",
+          "start": "2023",
+          "title": "TCPS 2: CORE Research Ethics",
+          "org": "Government of Canada"
+        }
+      ]
+    },
+    {
+      "id": "skills",
+      "label": "Skills",
+      "groups": [
+        {
+          "label": "Design",
+          "items": ["UI/UX Design", "User-Centred Design (UCD)", "Interactive Prototyping", "User Journey Mapping", "Web Accessibility (WCAG 2.1)", "Design Systems", "Visual Storytelling"]
+        },
+        {
+          "label": "Development",
+          "items": ["React.js", "Next.js", "JavaScript (ES6+)", "Tailwind CSS", "Webflow", "Framer", "HTML5/CSS3", "Node.js", "REST APIs"]
+        },
+        {
+          "label": "Tools",
+          "items": ["Figma (Advanced)", "Adobe Creative Cloud", "VS Code", "Git/GitHub", "Insomnia", "MySQL", "MongoDB", "IBM Carbon Design System"]
+        },
+        {
+          "label": "Soft skills",
+          "items": ["Design Thinking", "Critical Thinking", "Creative Problem Solving", "Collaboration", "Time Management", "Conceptual Thinking"]
+        }
+      ]
+    }
+  ],
+  "updatedAt": "2026-10-23"
+}

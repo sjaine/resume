@@ -1,0 +1,249 @@
+/*
+ * Every value here comes from DESIGN.md. Change a token there, then mirror it in this :root block.
+ * Layout: one 640px column of text; the logo and Download PDF float in the top corners.
+ */
+
+/* ---------- Tokens (DESIGN.md → CSS) ---------- */
+:root {
+  /* colors */
+  --color-background: #ffffff;
+  --color-surface: #f4f3f0;
+  --color-surface-strong: #e6e5e0;
+  --color-on-background: #1c1c1a;
+  --color-on-surface-muted: #6f6e69;
+  --color-outline: #dcdbd6;
+  --color-outline-strong: #9e9d97;
+  --color-primary: #1c1c1a;
+  --color-on-primary: #ffffff;
+  --color-primary-hover: #3a3a37;
+  --color-accent: #2f5bd3;
+  --color-warning: #b4561c;
+  --color-on-warning: #ffffff;
+
+  /* typography */
+  --font-ui: var(--font-geist-sans, ui-sans-serif), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-data: var(--font-geist-mono, ui-monospace), ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --type-name: 500 15px/1.3 var(--font-ui);
+  --type-title: 500 14px/1.45 var(--font-ui);
+  --type-body: 400 14px/1.55 var(--font-ui);
+  --type-label: 500 13px/1.2 var(--font-ui);
+  --type-caption: 400 12px/1.35 var(--font-ui);
+  --type-data: 400 12px/1.55 var(--font-data);
+
+  /* rounded */
+  --rounded-xs: 3px;
+  --rounded-full: 999px;
+
+  /* spacing */
+  --space-xxs: 4px;
+  --space-xs: 6px;
+  --space-sm: 10px;
+  --space-md: 14px;
+  --space-lg: 20px;
+  --space-xl: 28px;
+  --space-xxl: 48px;
+
+  /* layout */
+  --page-w: 640px;
+  --date-w: 144px;
+  --gutter: max(16px, env(safe-area-inset-left, 0px));
+
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: #161615;
+    --color-surface: #22221f;
+    --color-surface-strong: #2e2e2a;
+    --color-on-background: #ecebe6;
+    --color-on-surface-muted: #9a9993;
+    --color-outline: #2e2e2b;
+    --color-outline-strong: #5b5a55;
+    --color-primary: #ecebe6;
+    --color-on-primary: #161615;
+    --color-primary-hover: #d4d3cd;
+    --color-accent: #7d9bff;
+    --color-warning: #e08a52;
+    --color-on-warning: #161615;
+    color-scheme: dark;
+  }
+}
+
+/* ---------- Base ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--color-background);
+  color: var(--color-on-background);
+  font: var(--type-body);
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, p, ul, dl, dd { margin: 0; padding: 0; }
+button { font: inherit; color: inherit; margin: 0; }
+:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; border-radius: var(--rounded-xs); }
+.data { font: var(--type-data); font-variant-numeric: tabular-nums; }
+.print-only { display: none; }
+
+/* ---------- Chrome: logo (top left) + Download PDF (top right) ---------- */
+.logo {
+  position: fixed; z-index: 10;
+  top: max(16px, env(safe-area-inset-top, 0px)); left: var(--gutter);
+  width: 30px; height: 30px;
+  display: flex; align-items: center; justify-content: center;
+  background: #000; border-radius: 5px;
+}
+.logo-mark { position: relative; width: 100%; height: 100%; }
+.logo-mark img { object-fit: contain; user-select: none; pointer-events: none; }
+
+.download {
+  position: fixed; z-index: 10;
+  top: calc(max(16px, env(safe-area-inset-top, 0px)) + 1px);
+  right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex; flex-direction: column; align-items: flex-end; gap: var(--space-xxs);
+}
+.download .btn[aria-busy='true'] { cursor: progress; }
+.download-status { font: var(--type-caption); color: var(--color-warning); min-height: 0; }
+.download-status:empty { display: none; }
+@media (min-width: 720px) {
+  .logo { top: 20px; left: 20px; }
+  .download { top: 21px; right: 20px; }
+}
+
+/* ---------- Buttons (components: button-*) ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--space-xs);
+  height: 36px; padding: 0 16px;
+  border: 1px solid transparent; border-radius: var(--rounded-full);
+  font: var(--type-label); white-space: nowrap; text-decoration: none; cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-primary { background: var(--color-primary); color: var(--color-on-primary); }
+.btn-primary:hover:not(:disabled) { background: var(--color-primary-hover); }
+.btn-sm { font: var(--type-caption); font-weight: 500; height: 28px; padding: 0 12px; }
+.btn-xs { font: var(--type-caption); font-weight: 500; height: 24px; padding: 0 8px; }
+.btn-text { background: transparent; color: var(--color-on-surface-muted); }
+.btn-text:hover:not(:disabled) { background: var(--color-surface); color: var(--color-on-background); }
+.btn[aria-busy='true'] { cursor: progress; }
+
+/* On phones Download PDF collapses to an icon button. */
+@media (max-width: 559px) {
+  .download .btn { width: 28px; padding: 0; }
+  .download-label {
+    position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+  }
+}
+
+/* ---------- Link ---------- */
+.link {
+  color: var(--color-on-background);
+  text-decoration: underline;
+  text-decoration-color: var(--color-outline-strong);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: color 0.15s ease, text-decoration-color 0.15s ease;
+}
+.link:hover { color: var(--color-on-surface-muted); text-decoration-color: var(--color-on-background); }
+
+/* ---------- Page ---------- */
+.page {
+  width: 100%; max-width: calc(var(--page-w) + 2 * var(--gutter));
+  margin-inline: auto;
+  padding: 96px var(--gutter) var(--space-xxl);
+}
+@media (max-width: 559px) { .page { padding-top: 72px; } }
+
+/* header block */
+.cv-header { margin-bottom: var(--space-xxl); }
+.cv-name { font: var(--type-name); letter-spacing: 0.01em; }
+.cv-role { color: var(--color-on-surface-muted); }
+.cv-contacts { display: flex; flex-wrap: wrap; column-gap: var(--space-md); row-gap: 2px; margin-top: var(--space-xxs); color: var(--color-on-surface-muted); }
+
+/* sections */
+.cv-section + .cv-section { margin-top: var(--space-xxl); }
+.section-label { font: var(--type-label); color: var(--color-on-surface-muted); margin-bottom: var(--space-md); }
+.entries { display: flex; flex-direction: column; gap: var(--space-xl); }
+
+/* entries: the date column + content grid */
+.entry, .skills .row {
+  display: grid;
+  grid-template-columns: var(--date-w) minmax(0, 1fr);
+  column-gap: var(--space-lg);
+}
+.entry-date { font: var(--type-data); font-variant-numeric: tabular-nums; color: var(--color-on-surface-muted); padding-top: 1px; white-space: nowrap; }
+.entry-title { font: var(--type-title); }
+.entry-meta { color: var(--color-on-surface-muted); }
+.entry-body { list-style: none; margin-top: var(--space-xs); display: flex; flex-direction: column; gap: var(--space-xxs); text-wrap: pretty; }
+
+/* skills: one muted word, then comma-separated text */
+.skills { display: flex; flex-direction: column; gap: var(--space-sm); }
+.skills dt { color: var(--color-on-surface-muted); }
+.skills dd { text-wrap: pretty; }
+
+@media (max-width: 559px) {
+  .entry, .skills .row { grid-template-columns: minmax(0, 1fr); }
+  .entry-date { padding-top: 0; }
+}
+
+/* footer */
+.cv-footer {
+  margin-top: 96px; padding-top: var(--space-md);
+  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-xs) var(--space-md);
+  font: var(--type-caption); color: var(--color-on-surface-muted);
+}
+.cv-footer > span { white-space: nowrap; }
+.cv-footer .data { font-size: 12px; }
+
+/* admin control (footer, right) — DESIGN.md → Components → Admin login */
+.admin { display: flex; align-items: center; justify-content: flex-end; gap: var(--space-xxs); flex-wrap: wrap; margin-left: auto; }
+.admin-note { padding-inline: 8px; }
+.login input {
+  width: 160px; max-width: 46vw; height: 24px; padding: 0 10px;
+  border: 1px solid var(--color-outline); border-radius: var(--rounded-full);
+  background: var(--color-background); color: var(--color-on-background);
+  font: var(--type-caption);
+}
+.login input::placeholder { color: var(--color-on-surface-muted); }
+.login input:focus { outline: none; border-color: var(--color-accent); box-shadow: 0 0 0 1px var(--color-accent); }
+.login input[aria-invalid='true'] { border-color: var(--color-warning); }
+.login input[aria-invalid='true']:focus { box-shadow: 0 0 0 1px var(--color-warning); }
+.login-error { color: var(--color-warning); padding-inline-end: var(--space-xxs); }
+
+/* ---------- Print (US Letter, always light) ---------- */
+@page { size: letter; margin: 0.5in 0.6in; }
+@media print {
+  :root {
+    --color-background: #ffffff;
+    --color-on-background: #1c1c1a;
+    --color-on-surface-muted: #6f6e69;
+    --type-name: 500 13pt/1.3 var(--font-ui);
+    --type-title: 500 9.5pt/1.35 var(--font-ui);
+    --type-body: 400 9.5pt/1.38 var(--font-ui);
+    --type-label: 500 9pt/1.2 var(--font-ui);
+    --type-data: 400 8.5pt/1.45 var(--font-data);
+    --date-w: 1.4in;
+    --space-xxl: 0.17in;
+    --space-xl: 0.09in;
+    --space-md: 0.07in;
+    --space-xs: 2pt;
+    --space-xxs: 1pt;
+    color-scheme: light;
+  }
+  body { background: #fff; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  .logo, .download, .cv-footer { display: none !important; }
+  .print-only { display: inline; }
+  .page { max-width: none; padding: 0; }
+  .cv-header { margin-bottom: var(--space-xxl); }
+  .link { text-decoration: none; color: inherit; }
+  .entry-body, .skills dd { text-wrap: wrap; }
+  .skills { gap: 3pt; }
+  /* On paper the title and its meta share one line: "Junior Designer  Sheridan Student Union · Oakville, ON" */
+  .entry-head { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 8pt; }
+  .entry, .skills .row { break-inside: avoid; }
+  .section-label { break-after: avoid; }
+  /* print never collapses to the phone layout */
+  .entry, .skills .row { grid-template-columns: var(--date-w) minmax(0, 1fr); }
+}
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
