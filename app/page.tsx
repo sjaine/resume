@@ -1,10 +1,12 @@
-import { dateRange, formatUpdated, getCV, type Entry, type Section } from '@/lib/cv';
+import { dateRange, formatUpdated, type Entry, type Section } from '@/lib/cv';
+import { getPublished, versionOf } from '@/lib/store';
 import Logo from './Logo';
 import DownloadButton from './DownloadButton';
 import AdminControl from './AdminControl';
 
-export default function Page() {
-  const { profile, sections, updatedAt } = getCV();
+export default async function Page() {
+  const doc = await getPublished();
+  const { profile, sections, updatedAt } = doc.cv;
 
   return (
     <>

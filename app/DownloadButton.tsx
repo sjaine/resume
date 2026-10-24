@@ -11,7 +11,8 @@ type State = 'idle' | 'preparing' | 'error';
  * Downloads the server-rendered PDF. While the file is being prepared the label reads "Preparing…"
  * at the button's original width, so nothing next to it shifts (DESIGN.md → Components → Read mode).
  */
-export default function DownloadButton() {
+/** `version` changes on every Publish, so the CDN never hands out an old PDF. */
+export default function DownloadButton({ version }: { version: string }) {
   const [state, setState] = useState<State>('idle');
   const [pages, setPages] = useState<number | null>(null);
   const ref = useRef<HTMLButtonElement>(null);
@@ -22,7 +23,7 @@ export default function DownloadButton() {
     if (btn) btn.style.minWidth = `${btn.getBoundingClientRect().width}px`; // hold the width while the label changes
     setState('preparing');
     try {
-      const res = await fetch(URL_PATH);
+      const res = await fetch(`${URL_PATH}?v=${encodeURIComponent(version)}`);
       if (!res.ok) throw new Error(String(res.status));
       setPages(Number(res.headers.get('X-Resume-Pages')) || null);
       const blob = await res.blob();

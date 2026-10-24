@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import localFont from 'next/font/local';
-import { getCV } from '@/lib/cv';
+import { getPublished } from '@/lib/store';
 import './globals.css';
 
 /*
@@ -22,12 +22,10 @@ const mono = localFont({
   src: [{ path: './fonts/GeistMono-Regular.woff2', weight: '400', style: 'normal' }],
 });
 
-const { profile } = getCV();
-
-export const metadata: Metadata = {
-  title: `${profile.name} — CV`,
-  description: `${profile.role} · ${profile.location}`,
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { profile } = (await getPublished()).cv;
+  return { title: `${profile.name} — CV`, description: `${profile.role} · ${profile.location}` };
+}
 
 export const viewport: Viewport = { width: 'device-width', initialScale: 1, viewportFit: 'cover' };
 

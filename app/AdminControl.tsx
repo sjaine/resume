@@ -1,7 +1,9 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion, useAnimationControls, useReducedMotion } from 'motion/react';
+import { publishCV } from './actions';
 
 /*
  * The footer's admin control (DESIGN.md → Components → Admin login).
@@ -9,7 +11,7 @@ import { motion, useAnimationControls, useReducedMotion } from 'motion/react';
  *   - ⌘ . (Ctrl . on Windows) opens it from anywhere.
  *   - Escape or Cancel collapses it back to "Admin".
  *   - A wrong password shakes the field once and shows the error beside it.
- * Once logged in it reads "Signed in · Log out". Stage D replaces this with the edit-bar.
+ * Once logged in it reads "Signed in · Publish · Log out". Stage D replaces this with the edit-bar.
  */
 
 type Mode = 'closed' | 'open' | 'busy';
@@ -19,8 +21,11 @@ export default function AdminControl() {
   const [mode, setMode] = useState<Mode>('closed');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [publishing, setPublishing] = useState(false);
+  const [note, setNote] = useState('Signed in');
   const inputRef = useRef<HTMLInputElement>(null);
   const adminBtnRef = useRef<HTMLButtonElement>(null);
+  const router = useRouter();
   const shake = useAnimationControls();
   const reduce = useReducedMotion();
 
@@ -89,10 +94,28 @@ export default function AdminControl() {
     requestAnimationFrame(() => adminBtnRef.current?.focus());
   }
 
+  async function publish() {
+    setPublishing(true);
+    const result = await publishCV().catch(() => ({ ok: false as const, error: 'Could not reach the server.' }));
+    setPublishing(false);
+    if (result.ok) {
+      setNote('Published');
+      router.refresh(); // show the new published version
+    } else {
+      setNote(result.error);
+      if (result.error.startsWith('Log in')) setAdmin(false);
+    }
+    setTimeout(() => setNote('Signed in'), 3000);
+  }
+
   if (admin) {
     return (
       <div className="admin">
-        <span className="admin-note">Signed in</span>
+        <span className="admin-note" role="status">{note}</span>
+        {/* Stage C: publishes the draft as it is. Stage D moves this into the edit-bar. */}
+        <button type="button" className="btn btn-text btn-xs" onClick={publish} disabled={publishing} aria-busy={publishing}>
+          Publish
+        </button>
         <button type="button" className="btn btn-text btn-xs" onClick={logout}>Log out</button>
       </div>
     );
