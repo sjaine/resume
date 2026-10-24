@@ -1,6 +1,6 @@
 ---
 version: alpha
-name: Jay Shin CV
+name: Jaine Shin CV
 description: A one-page CV that reads like a sheet of paper on the web and prints like one.
 colors:
   background: "#FFFFFF"
@@ -219,7 +219,7 @@ components:
     padding: 14px
 ---
 
-# Jay Shin CV
+# Jaine Shin CV
 
 ## Overview
 

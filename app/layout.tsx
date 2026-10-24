@@ -24,7 +24,10 @@ const mono = localFont({
 
 export async function generateMetadata(): Promise<Metadata> {
   const { profile } = (await getPublished()).cv;
-  return { title: `${profile.name} — CV`, description: `${profile.role} · ${profile.location}` };
+  return {
+    title: 'Jaine_Shin_Resume',
+    description: `${profile.role} · ${profile.location}`,
+  };
 }
 
 export const viewport: Viewport = { width: 'device-width', initialScale: 1, viewportFit: 'cover' };

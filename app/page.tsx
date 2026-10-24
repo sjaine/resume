@@ -11,7 +11,7 @@ export default async function Page() {
   return (
     <>
       <Logo />
-      <DownloadButton />
+      <DownloadButton version={versionOf(doc)} />
 
       <main className="page">
         <header className="cv-header">

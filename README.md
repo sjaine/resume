@@ -1,6 +1,6 @@
-# CV
+# Resume
 
-A one-page CV that reads like paper on the web and prints like it. Design rules live in `DESIGN.md`.
+A one-page resume that reads like paper on the web and prints like it. Design rules live in `DESIGN.md`.
 
 - Content: `data/cv.json` (stage 1). Later stages move this to a database with in-page editing.
 - Download PDF: browser print → "Save as PDF" for now (print styles in `app/globals.css`).
