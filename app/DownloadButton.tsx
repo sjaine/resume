@@ -7,12 +7,11 @@ const FILENAME = 'Jaine_Shin_Resume.pdf';
 
 type State = 'idle' | 'preparing' | 'error';
 
-/*
- * Downloads the server-rendered PDF. While the file is being prepared the label reads "Preparing…"
- * at the button's original width, so nothing next to it shifts (DESIGN.md → Components → Read mode).
+/**
+ * `subtle`: outlined instead of filled, for edit mode, where Publish is the one filled button in view.
+ * Either way it downloads the published PDF, the same file visitors get.
  */
-/** `version` changes on every Publish, so the CDN never hands out an old PDF. */
-export default function DownloadButton({ version }: { version: string }) {
+export default function DownloadButton({ version, subtle = false }: { version: string; subtle?: boolean }) {
   const [state, setState] = useState<State>('idle');
   const [pages, setPages] = useState<number | null>(null);
   const ref = useRef<HTMLButtonElement>(null);
@@ -51,7 +50,8 @@ export default function DownloadButton({ version }: { version: string }) {
       <button
         ref={ref}
         type="button"
-        className="btn btn-primary btn-sm"
+        className={`btn ${subtle ? 'btn-secondary' : 'btn-primary'} btn-sm`}
+        title={subtle ? 'Downloads the published version' : undefined}
         onClick={download}
         aria-busy={state === 'preparing'}
         aria-label={state === 'idle' ? 'Download PDF' : label}

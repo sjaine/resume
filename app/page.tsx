@@ -11,7 +11,7 @@ export default async function Page() {
   return (
     <>
       <Logo />
-      <CVApp published={doc.cv} publishedRev={doc.rev} version={versionOf(doc)} />
+      <CVApp published={doc.cv} publishedRev={doc.rev} publishedAt={doc.savedAt} version={versionOf(doc)} />
     </>
   );
 }

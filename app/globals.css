@@ -201,8 +201,14 @@ button {
   background: var(--color-primary);
   color: var(--color-on-primary);
 }
-.btn-primary:hover:not(:disabled) {
-  background: var(--color-primary-hover);
+.btn-secondary {
+  background: var(--color-background);
+  color: var(--color-on-background);
+  border-color: var(--color-outline);
+}
+.btn-secondary:hover:not(:disabled) {
+  background: var(--color-surface);
+  border-color: var(--color-outline-strong);
 }
 .btn-sm {
   font: var(--type-caption);
@@ -587,6 +593,27 @@ button {
   color: var(--color-on-background);
 }
 
+/* ---------- G3: history panel (floats above the edit-bar) ---------- */
+.history {
+  position: fixed; z-index: 21; left: 50%; transform: translateX(-50%);
+  bottom: calc(max(24px, env(safe-area-inset-bottom, 0px)) + 48px);
+  width: min(360px, calc(100vw - 32px)); max-height: min(420px, 60vh); overflow-y: auto;
+  padding: 6px; background: var(--color-background);
+  border: 1px solid var(--color-outline); border-radius: var(--rounded-md); box-shadow: var(--shadow-lift);
+}
+.history-title { padding: 6px 10px 4px; font: var(--type-caption); color: var(--color-on-surface-muted); }
+.history ul { list-style: none; margin: 0; padding: 0; }
+.history li button {
+  width: 100%; display: grid; grid-template-columns: 1fr auto; column-gap: var(--space-sm); row-gap: 1px; align-items: center;
+  padding: 8px 10px; border: 0; border-radius: var(--rounded-sm); background: transparent; text-align: left; cursor: pointer;
+}
+.history li button:hover, .history li button:focus-visible { background: var(--color-surface); outline: none; }
+.history-when { font: var(--type-data); color: var(--color-on-background); }
+.history-meta { grid-column: 1; font: var(--type-caption); color: var(--color-on-surface-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.history .status-pill { grid-column: 2; grid-row: 1 / span 2; }
+.history-empty { padding: 10px; font: var(--type-caption); color: var(--color-on-surface-muted); }
+.history-empty.is-error { color: var(--color-warning); }
+.edit-bar.is-viewing { border-color: var(--color-outline-strong); }
 /* ---------- Edit mode: structure (D3 add/remove, D4 drag, D5 hide) ---------- */
 /* Handles and menus sit outside the text column and fade in on hover, so the layout never moves. */
 .is-editing {
