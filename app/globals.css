@@ -210,6 +210,68 @@ button { font: inherit; color: inherit; margin: 0; }
 .login input[aria-invalid='true']:focus { box-shadow: 0 0 0 1px var(--color-warning); }
 .login-error { color: var(--color-warning); padding-inline-end: var(--space-xxs); }
 
+/* ---------- Edit mode (DESIGN.md → Components → Edit mode) ---------- */
+/* Fields are edited in place. Hover and focus use box-shadow, never padding, so nothing moves. */
+.editable { outline: none; border-radius: var(--rounded-xs); cursor: text; transition: background-color 0.12s ease, box-shadow 0.12s ease; }
+.editing .editable:hover { background: var(--color-surface); box-shadow: 0 0 0 3px var(--color-surface); }
+.editing .editable:focus {
+  background: var(--color-surface);
+  /* a 2px accent line on the left, outside the 3px surface ring */
+  box-shadow: -5px 0 0 0 var(--color-accent), 0 0 0 3px var(--color-surface);
+}
+.editable:empty::before { content: attr(data-placeholder); color: var(--color-on-surface-muted); pointer-events: none; }
+.editable:empty { display: inline-block; min-width: 2ch; }
+
+.page.editing { padding-bottom: 140px; }
+.date-sep { color: var(--color-on-surface-muted); }
+
+/* contacts (D6): a small table under the header, edit mode only */
+.contacts-edit { display: flex; flex-direction: column; gap: var(--space-xs); margin-top: var(--space-md); }
+.contact-row {
+  display: grid; grid-template-columns: 72px minmax(0, 1fr) minmax(0, 1.2fr) auto auto;
+  align-items: center; column-gap: var(--space-sm);
+}
+.contact-label { color: var(--color-on-surface-muted); }
+.contact-href { font: var(--type-data); color: var(--color-on-surface-muted); overflow-wrap: anywhere; }
+.contact-pdf { display: inline-flex; align-items: center; gap: var(--space-xxs); font: var(--type-caption); color: var(--color-on-surface-muted); white-space: nowrap; cursor: pointer; }
+.contact-pdf input { accent-color: var(--color-primary); margin: 0; }
+.add-contact { align-self: flex-start; margin-left: -8px; }
+@media (max-width: 559px) {
+  .contact-row { grid-template-columns: 1fr auto auto; row-gap: 2px; }
+  .contact-label { grid-column: 1 / -1; }
+  .contact-href { grid-column: 1 / -1; grid-row: 3; }
+}
+
+.btn-danger { background: var(--color-warning); color: var(--color-on-warning); }
+
+/* edit-bar: floats bottom centre; the one shadow on the page */
+.edit-bar {
+  position: fixed; z-index: 20; left: 50%; transform: translateX(-50%);
+  bottom: max(24px, env(safe-area-inset-bottom, 0px));
+  width: max-content; max-width: calc(100vw - 32px);
+  display: flex; align-items: center; gap: var(--space-xxs); flex-wrap: nowrap; white-space: nowrap;
+  padding: 4px 4px 4px 6px;
+  background: var(--color-background); border: 1px solid var(--color-outline); border-radius: var(--rounded-full);
+  box-shadow: 0 1px 2px rgba(20, 20, 18, 0.08), 0 8px 24px -8px rgba(20, 20, 18, 0.18);
+  font: var(--type-caption); color: var(--color-on-surface-muted);
+}
+.status-pill {
+  display: inline-flex; align-items: center; height: 20px; padding: 0 8px; border-radius: var(--rounded-full);
+  background: var(--color-surface); color: var(--color-on-surface-muted);
+  font: 400 9.5px/1 var(--font-data); letter-spacing: 0.04em;
+}
+.status-pill.is-draft { background: var(--color-surface-strong); color: var(--color-on-background); }
+.edit-note { min-width: 52px; padding-inline: 6px; white-space: nowrap; }
+.edit-note.is-error, .edit-warn { color: var(--color-warning); }
+.edit-warn { padding-inline: 6px; white-space: nowrap; }
+.edit-spacer { width: var(--space-sm); flex: none; }
+@media (max-width: 559px) {
+  .edit-bar { left: 16px; right: 16px; transform: none; width: auto; justify-content: space-between; }
+  .edit-spacer { display: none; }
+  .edit-note { min-width: 0; overflow: hidden; text-overflow: ellipsis; flex: 1 1 auto; }
+}
+.edit-bar .btn[aria-pressed='true'] { color: var(--color-on-background); }
+
 /* ---------- Print (US Letter, always light) ---------- */
 @page { size: letter; margin: 0.5in 0.6in; }
 @media print {
@@ -231,7 +293,7 @@ button { font: inherit; color: inherit; margin: 0; }
     color-scheme: light;
   }
   body { background: #fff; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
-  .logo, .download, .cv-footer { display: none !important; }
+  .logo, .download, .cv-footer, .edit-bar, .contacts-edit { display: none !important; }
   .print-only { display: inline; }
   .page { max-width: none; padding: 0; }
   .cv-header { margin-bottom: var(--space-xxl); }

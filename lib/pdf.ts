@@ -46,9 +46,19 @@ export function countPages(pdf: Uint8Array) {
 }
 
 /** Renders `url` in print mode and returns the PDF bytes and page count. */
-export async function renderPdf(url: string, headers: Record<string, string> = {}) {
+/**
+ * Renders `url` in print mode and returns the PDF bytes and page count.
+ * `cookies` are set for that URL first (the draft preview needs the admin session).
+ */
+export async function renderPdf(
+  url: string,
+  headers: Record<string, string> = {},
+  cookies: { name: string; value: string }[] = [],
+) {
   const browser = await launch();
   try {
+    const { hostname } = new URL(url);
+    if (cookies.length) await browser.setCookie(...cookies.map((c) => ({ ...c, domain: hostname, path: '/' })));
     const page = await browser.newPage();
     if (Object.keys(headers).length) await page.setExtraHTTPHeaders(headers);
     await page.emulateMediaType('print');
