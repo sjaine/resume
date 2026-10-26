@@ -19,14 +19,45 @@ type Props = {
   /** Enter inserts a line break instead of finishing the field. */
   multiline?: boolean;
   maxLength?: number;
+  /** Enter calls this instead of just finishing the field (e.g. "add the next bullet"). */
+  onEnter?: () => void;
+  /** Backspace in an empty field calls this (e.g. "remove this bullet"). */
+  onBackspaceEmpty?: () => void;
+  /** Lets focusField(key) move the caret here after a change. */
+  focusKey?: string;
 };
 
 const NBSP = new RegExp(String.fromCharCode(160), 'g'); // non-breaking spaces from paste
 
-export default function Field({ value, onChange, placeholder, as = 'span', className, multiline, maxLength }: Props) {
+/**
+ * Puts the caret at the end of the field rendered with `focusKey={key}`.
+ * Runs right after React commits the change (a microtask after the key press), so a quick
+ * next keystroke already lands in the new field; falls back to the next frame if needed.
+ */
+export function focusField(key: string) {
+  const tryFocus = () => {
+    const el = document.querySelector<HTMLElement>(`[data-focus="${CSS.escape(key)}"]`);
+    if (!el) return false;
+    el.focus();
+    const range = document.createRange();
+    range.selectNodeContents(el);
+    range.collapse(false);
+    const sel = window.getSelection();
+    sel?.removeAllRanges();
+    sel?.addRange(range);
+    return true;
+  };
+  queueMicrotask(() => { if (!tryFocus()) requestAnimationFrame(() => { tryFocus(); }); });
+}
+
+export default function Field({
+  value, onChange, placeholder, as = 'span', className, multiline, maxLength, onEnter, onBackspaceEmpty, focusKey,
+}: Props) {
   const ref = useRef<HTMLElement>(null);
   const latest = useRef(value);
   latest.current = value;
+  /** True once the user has typed in this field since it was focused. Only then may blur save. */
+  const typed = useRef(false);
 
   /** Same rules while typing and when leaving the field: no line breaks (unless multiline), within maxLength. */
   const normalise = (raw: string) => {
@@ -65,18 +96,36 @@ export default function Field({ value, onChange, placeholder, as = 'span', class
     'aria-label': placeholder,
     'aria-multiline': multiline || undefined,
     'data-placeholder': placeholder,
+    'data-focus': focusKey,
     spellCheck: true,
-    onInput: (e: React.FormEvent<HTMLElement>) => onChange(normalise(e.currentTarget.textContent ?? '')),
+    onFocus: () => { typed.current = false; },
+    onInput: (e: React.FormEvent<HTMLElement>) => {
+      typed.current = true;
+      onChange(normalise(e.currentTarget.textContent ?? ''));
+    },
     onKeyDown: (e: React.KeyboardEvent<HTMLElement>) => {
-      if ((e.key === 'Enter' && !multiline) || e.key === 'Escape') {
+      if (e.nativeEvent.isComposing) return; // Korean/Japanese input: Enter confirms the character
+      if (e.key === 'Enter' && !multiline && onEnter && !e.shiftKey) {
+        e.preventDefault();
+        onChange(normalise(e.currentTarget.textContent ?? '').trim());
+        onEnter();
+      } else if ((e.key === 'Enter' && !multiline) || e.key === 'Escape') {
         e.preventDefault();
         e.currentTarget.blur();
+      } else if (e.key === 'Backspace' && onBackspaceEmpty && !(e.currentTarget.textContent ?? '')) {
+        e.preventDefault();
+        // Let go of the caret first: the next item will slide into this spot and must be redrawn.
+        typed.current = false;
+        e.currentTarget.blur();
+        onBackspaceEmpty();
       }
     },
     onBlur: (e: React.FocusEvent<HTMLElement>) => {
       // Tidy up (trim, limit), then show the stored value (e.g. "a,b" → "a, b" for skills).
+      // Only text the user typed is saved: a field that was merely passed through never overwrites data.
       const tidy = normalise(e.currentTarget.textContent ?? '').trim();
-      if (tidy !== value) onChange(tidy);
+      if (typed.current && tidy !== latest.current) onChange(tidy);
+      typed.current = false;
       requestAnimationFrame(() => {
         const el = ref.current;
         if (el && document.activeElement !== el && el.textContent !== latest.current) el.textContent = latest.current;
